@@ -1,52 +1,39 @@
 //go:build mage
-// +build mage
 
 package main
 
 import (
 	"context"
-	"log"
-	"os"
-	"os/exec"
 
 	"github.com/magefile/mage/mg"
-	"github.com/magefile/mage/sh"
+	//mage:import na4ma4
+	"github.com/na4ma4/mage"
 )
 
 var Default = Test
 
+func Lint(ctx context.Context) error {
+	mg.CtxDeps(ctx, mage.GoLint)
+	return nil
+}
+
 func Test(ctx context.Context) error {
-	log.Println("Testing...")
-	mg.CtxDeps(ctx, ModDownload)
-	args := []string{
-		"test",
-	}
-
-	if os.Getenv("MAGEFILE_DEBUG") == "1" {
-		args = append(args, "-test.v=1")
-	}
-
-	if err := sh.RunV("go", append(args, "./...")...); err != nil {
-		return err
-	}
-
+	// chgBack := mage.ChangeLogger(func(format string, v ...any) {
+	// 	fmt.Printf(fmt.Sprintf("Intercepted Logs: %s\n", format), v...)
+	// })
+	// defer chgBack()
+	mg.CtxDeps(ctx, mage.GoTest)
+	mg.CtxDeps(ctx, mage.GoLint)
 	return nil
 }
 
 func Clean(ctx context.Context) error {
-	log.Println("Cleaning...")
-	if err := os.RemoveAll(".makefiles"); err != nil {
-		return err
-	}
-	if err := os.RemoveAll("artifacts/lint"); err != nil {
-		return err
-	}
+	mg.CtxDeps(ctx, mage.Clean)
 	return nil
 }
 
 // Manage your deps, or running package managers.
 func ModDownload(ctx context.Context) error {
-	log.Println("Downloading Modules...")
-	cmd := exec.Command("go", "mod", "download")
-	return cmd.Run()
+	mg.CtxDeps(ctx, mage.GoModDownload)
+	return nil
 }

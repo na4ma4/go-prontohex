@@ -2,3 +2,4 @@
 /artifacts
 /.vscode
 /dist
+/go.work.sum
