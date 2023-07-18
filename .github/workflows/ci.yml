@@ -6,4 +6,4 @@ on:
 
 jobs:
   unit-test:
-    uses: na4ma4/actions/.github/workflows/unit-test.yml@v1
+    uses: na4ma4/actions/.github/workflows/unit-test.yml@main
